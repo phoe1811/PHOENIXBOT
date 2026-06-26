@@ -1,0 +1,15 @@
+# Build files
+build/
+
+# ESP-IDF
+managed_components/
+
+# VS Code
+.vscode/
+
+# Temporary
+sdkconfig.old
+
+# CMake
+CMakeFiles/
+cmake_install.cmake

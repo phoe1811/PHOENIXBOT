@@ -1,0 +1,21 @@
+# This file was generated using idf.py save-defconfig or menuconfig [D] key. It can be edited manually.
+# Espressif IoT Development Framework (ESP-IDF) 6.0.1 Project Minimal Configuration
+#
+# default:
+CONFIG_IDF_TARGET="esp32p4"
+
+#
+# Component config
+#
+
+#
+# Hardware Settings
+#
+
+#
+# Chip revision
+#
+CONFIG_ESP32P4_SELECTS_REV_LESS_V3=y
+# end of Chip revision
+# end of Hardware Settings
+# end of Component config

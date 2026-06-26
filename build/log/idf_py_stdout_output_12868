@@ -1,0 +1,59 @@
+Command: C:\Espressif\tools\python\v6.0.1\venv\Scripts\python.exe C:\esp\v6.0.1\esp-idf\tools/idf_monitor.py -p COM5 -b 115200 --toolchain-prefix riscv32-esp-elf- --target esp32p4 --revision 0 --decode-panic backtrace C:\Users\chaur.PHOENIX_KALAM_T\OneDrive\Desktop\PHOENIXBOT\phoenixbot\build\phoenixbot.elf C:\Users\chaur.PHOENIX_KALAM_T\OneDrive\Desktop\PHOENIXBOT\phoenixbot\build\bootloader\bootloader.elf --force-color -m 'C:\Espressif\tools\python\v6.0.1\venv\Scripts\python.exe' 'C:\esp\v6.0.1\esp-idf\tools\idf.py' '-p' 'COM5'
+ESP-ROM:esp32p4-eco2-20240710
+Build:Jul 10 2024
+rst:0x1 (POWERON),boot:0xf (SPI_FAST_FLASH_BOOT)
+SPI mode:DIO, clock div:2
+load:0x4ff33ce0,len:0x15e0
+load:0x4ff29ed0,len:0xe44
+load:0x4ff2cbd0,len:0x359c
+entry 0x4ff29eda
+[0;32mI (28) boot: ESP-IDF v6.0.1 2nd stage bootloader[0m
+[0;32mI (28) boot: compile time Jun 26 2026 12:15:10[0m
+[0;32mI (28) boot: Multicore bootloader[0m
+[0;32mI (30) boot: chip revision: v1.3[0m
+[0;32mI (31) boot: efuse block revision: v0.3[0m
+[0;32mI (35) boot.esp32p4: SPI Speed      : 40MHz[0m
+[0;32mI (39) boot.esp32p4: SPI Mode       : DIO[0m
+[0;32mI (42) boot.esp32p4: SPI Flash Size : 2MB[0m
+[0;32mI (46) boot: Enabling RNG early entropy source...[0m
+[0;32mI (51) boot: Partition Table:[0m
+[0;32mI (53) boot: ## Label            Usage          Type ST Offset   Length[0m
+[0;32mI (59) boot:  0 nvs              WiFi data        01 02 00009000 00006000[0m
+[0;32mI (66) boot:  1 phy_init         RF data          01 01 0000f000 00001000[0m
+[0;32mI (72) boot:  2 factory          factory app      00 00 00010000 00100000[0m
+[0;32mI (80) boot: End of partition table[0m
+[0;32mI (83) esp_image: segment 0: paddr=00010020 vaddr=40020020 size=09038h ( 36920) map[0m
+[0;32mI (99) esp_image: segment 1: paddr=00019060 vaddr=30100000 size=00044h (    68) load[0m
+[0;32mI (101) esp_image: segment 2: paddr=000190ac vaddr=4ff00000 size=06f6ch ( 28524) load[0m
+[0;32mI (113) esp_image: segment 3: paddr=00020020 vaddr=40000020 size=133fch ( 78844) map[0m
+[0;32mI (132) esp_image: segment 4: paddr=00033424 vaddr=4ff06f6c size=05aa0h ( 23200) load[0m
+[0;32mI (139) esp_image: segment 5: paddr=00038ecc vaddr=4ff0ca80 size=0260ch (  9740) load[0m
+[0;32mI (146) boot: Loaded app from partition at offset 0x10000[0m
+[0;32mI (146) boot: Disabling RNG early entropy source...[0m
+[0;32mI (158) cpu_start: Multicore app[0m
+[0;32mI (169) cpu_start: GPIO 38 and 37 are used as console UART I/O pins[0m
+[0;32mI (169) cpu_start: Pro cpu start user code[0m
+[0;32mI (169) cpu_start: cpu freq: 360000000 Hz[0m
+[0;32mI (171) app_init: Application information:[0m
+[0;32mI (175) app_init: Project name:     phoenixbot[0m
+[0;32mI (179) app_init: App version:      1[0m
+[0;32mI (182) app_init: Compile time:     Jun 26 2026 12:13:12[0m
+[0;32mI (187) app_init: ELF file SHA256:  7b8930662...[0m
+[0;32mI (192) app_init: ESP-IDF:          v6.0.1[0m
+[0;32mI (196) efuse_init: Min chip rev:     v0.0[0m
+[0;32mI (199) efuse_init: Max chip rev:     v1.99 [0m
+[0;32mI (203) efuse_init: Chip rev:         v1.3[0m
+[0;32mI (207) heap_init: Initializing. RAM available for dynamic allocation:[0m
+[0;32mI (214) heap_init: At 4FF10890 len 0002A730 (169 KiB): RETENT_RAM[0m
+[0;32mI (219) heap_init: At 4FF3AFC0 len 00004BF0 (18 KiB): RAM[0m
+[0;32mI (224) heap_init: At 4FF40000 len 00060000 (384 KiB): RAM[0m
+[0;32mI (230) heap_init: At 50108080 len 00007F80 (31 KiB): RTCRAM[0m
+[0;32mI (235) heap_init: At 30100044 len 00001FBC (7 KiB): SPM[0m
+[0;32mI (241) spi_flash: detected chip: gd[0m
+[0;32mI (243) spi_flash: flash io: dio[0m
+[0;33mW (246) spi_flash: Detected size(32768k) larger than the size in the binary image header(2048k). Using the size in the binary image header.[0m
+[0;32mI (259) sleep_gpio: Configure to isolate all GPIO pins in sleep state[0m
+[0;32mI (265) sleep_gpio: Enable automatic switching of GPIO sleep configuration[0m
+[0;32mI (272) main_task: Started on CPU0[0m
+[0;32mI (292) main_task: Calling app_main()[0m
+[0;32mI (292) main_task: Returned from app_main()[0m

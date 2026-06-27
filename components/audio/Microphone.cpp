@@ -1,120 +1,102 @@
 #include "Microphone.hpp"
 
-#include "esp_log.h"
-#include <cstring>
+#include <stdio.h>
 
-static const char *TAG = "MIC";
+#include "driver/i2s_std.h"
+
+#define I2S_BCLK GPIO_NUM_5
+#define I2S_WS   GPIO_NUM_6
+#define I2S_DIN  GPIO_NUM_4
+
+static i2s_chan_handle_t rx_handle = NULL;
+
+Microphone::Microphone()
+{
+    sampleCount = 0;
+}
 
 esp_err_t Microphone::begin()
 {
-    esp_err_t err;
+    printf("MIC: Initializing...\n");
 
-    //------------------------------------------
-    // Create RX Channel
-    //------------------------------------------
+    i2s_chan_config_t chan_cfg =
+        I2S_CHANNEL_DEFAULT_CONFIG(
+            I2S_NUM_AUTO,
+            I2S_ROLE_MASTER);
 
-    i2s_chan_config_t chan_cfg = I2S_CHANNEL_DEFAULT_CONFIG(
-        I2S_NUM_AUTO,
-        I2S_ROLE_MASTER
-    );
+    ESP_ERROR_CHECK(
+        i2s_new_channel(
+            &chan_cfg,
+            NULL,
+            &rx_handle));
 
-    err = i2s_new_channel(
-        &chan_cfg,
-        NULL,
-        &rx_channel
-    );
-
-    if (err != ESP_OK)
+    i2s_std_config_t std_cfg =
     {
-        ESP_LOGE(TAG, "Failed to create RX channel");
-        return err;
-    }
+        .clk_cfg =
+            I2S_STD_CLK_DEFAULT_CONFIG(16000),
 
-    //------------------------------------------
-    // Standard Mode Configuration
-    //------------------------------------------
+        .slot_cfg =
+            I2S_STD_MSB_SLOT_DEFAULT_CONFIG(
+                I2S_DATA_BIT_WIDTH_32BIT,
+                I2S_SLOT_MODE_MONO),
 
-    i2s_std_config_t std_cfg = {
-
-        .clk_cfg = I2S_STD_CLK_DEFAULT_CONFIG(16000),
-
-        .slot_cfg = I2S_STD_MSB_SLOT_DEFAULT_CONFIG(
-            I2S_DATA_BIT_WIDTH_32BIT,
-            I2S_SLOT_MODE_MONO
-        ),
-
-        .gpio_cfg = {
-
+        .gpio_cfg =
+        {
             .mclk = I2S_GPIO_UNUSED,
-
-            .bclk = PIN_BCLK,
-
-            .ws = PIN_WS,
-
+            .bclk = I2S_BCLK,
+            .ws = I2S_WS,
             .dout = I2S_GPIO_UNUSED,
+            .din = I2S_DIN,
 
-            .din = PIN_DIN,
-
-            .invert_flags = {
-
+            .invert_flags =
+            {
                 .mclk_inv = false,
-
                 .bclk_inv = false,
-
                 .ws_inv = false,
             },
         },
     };
 
-    err = i2s_channel_init_std_mode(
-        rx_channel,
-        &std_cfg
-    );
+    ESP_ERROR_CHECK(
+        i2s_channel_init_std_mode(
+            rx_handle,
+            &std_cfg));
 
-    if (err != ESP_OK)
-    {
-        ESP_LOGE(TAG, "STD Mode Init Failed");
-        return err;
-    }
+    ESP_ERROR_CHECK(
+        i2s_channel_enable(
+            rx_handle));
 
-    //------------------------------------------
-    // Enable Channel
-    //------------------------------------------
-
-    err = i2s_channel_enable(rx_channel);
-
-    if (err != ESP_OK)
-    {
-        ESP_LOGE(TAG, "Enable Failed");
-        return err;
-    }
-
-    ESP_LOGI(TAG, "INMP441 Ready");
+    printf("MIC: Ready\n");
 
     return ESP_OK;
 }
 
-esp_err_t Microphone::read(int32_t *sample)
+esp_err_t Microphone::read()
 {
-    size_t bytes_read = 0;
+    size_t bytesRead = 0;
 
-    esp_err_t err = i2s_channel_read(
-        rx_channel,
-        sample,
-        sizeof(int32_t),
-        &bytes_read,
-        100
-    );
+    esp_err_t ret =
+        i2s_channel_read(
+            rx_handle,
+            samples,
+            sizeof(samples),
+            &bytesRead,
+            100);
 
-    if (err != ESP_OK)
-    {
-        return err;
-    }
+    if (ret != ESP_OK)
+        return ret;
 
-    if (bytes_read != sizeof(int32_t))
-    {
-        return ESP_FAIL;
-    }
+    sampleCount = bytesRead / sizeof(int32_t);
 
     return ESP_OK;
+}
+
+int32_t* Microphone::getBuffer()
+{
+    return samples;
+}
+
+size_t Microphone::getSampleCount()
+{
+    return sampleCount;
 }

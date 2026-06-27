@@ -1,24 +1,27 @@
 #include <stdio.h>
 
-extern "C"
-{
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 
-#include "audio.hpp"
-}
+#include "AudioEngine.hpp"
 
-extern "C"
-void app_main(void)
+extern "C" void app_main(void)
 {
     printf("\n");
     printf("=========================================\n");
-    printf("      PHOENIXBOT V1.0 STARTING\n");
+    printf("      PHOENIXBOT V1.1 STARTING\n");
     printf("=========================================\n");
 
-    if(audio_init()!=ESP_OK)
+    static AudioEngine audio;
+
+    esp_err_t err = audio.begin();
+
+    if(err != ESP_OK)
     {
-        printf("Audio Init Failed\n");
+        printf("\n");
+        printf("=========================================\n");
+        printf(" AUDIO INITIALIZATION FAILED\n");
+        printf("=========================================\n");
 
         while(true)
         {
@@ -26,13 +29,15 @@ void app_main(void)
         }
     }
 
-    printf("PHOENIXBOT READY\n");
+    printf("\n");
+    printf("=========================================\n");
+    printf("      PHOENIXBOT READY\n");
+    printf("=========================================\n");
 
     while(true)
     {
-        printf("LEVEL = %lu\n",
-               (unsigned long)audio_get_level());
+        audio.voiceDetected();
 
-        vTaskDelay(pdMS_TO_TICKS(100));
+        vTaskDelay(pdMS_TO_TICKS(20));
     }
 }

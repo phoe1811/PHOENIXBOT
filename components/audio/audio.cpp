@@ -3,6 +3,7 @@
 
 #include "esp_log.h"
 #include <stdlib.h>
+#include <math.h>
 
 static const char *TAG = "AUDIO";
 
@@ -31,13 +32,31 @@ esp_err_t audio_init(void)
 extern "C"
 esp_err_t audio_read_sample(int32_t *sample)
 {
-    esp_err_t err = microphone.read(sample);
+    esp_err_t err = microphone.read();
 
     if(err != ESP_OK)
         return err;
 
-    // INMP441 24-bit sample normalize
-    *sample >>= 8;
+    int32_t *buffer = microphone.getBuffer();
+
+    size_t count = microphone.getSampleCount();
+
+    if(count == 0)
+    {
+        *sample = 0;
+        return ESP_OK;
+    }
+
+    double sum = 0;
+
+    for(size_t i = 0; i < count; i++)
+    {
+        double s = (double)(buffer[i] >> 8);
+
+        sum += s * s;
+    }
+
+    *sample = (int32_t)sqrt(sum / count);
 
     return ESP_OK;
 }
@@ -45,10 +64,10 @@ esp_err_t audio_read_sample(int32_t *sample)
 extern "C"
 uint32_t audio_get_level(void)
 {
-    int32_t sample;
+    int32_t sample = 0;
 
-    if(audio_read_sample(&sample)!=ESP_OK)
+    if(audio_read_sample(&sample) != ESP_OK)
         return 0;
 
-    return abs(sample);
+    return (uint32_t)sample;
 }
